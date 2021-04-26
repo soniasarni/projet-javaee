@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import beans.Stock;
 
+
+
 /**
  * Servlet implementation class listerStockServlet
  */
@@ -31,26 +33,41 @@ public class listerStockServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		StockDaoImpl nSDao = new  StockDaoImpl();
-		request.setAttribute("monStock", nSDao.read());
-			
+		StockDaoImpl liStDao = new  StockDaoImpl();
+		List<Stock> listearticle = new ArrayList<>();	
+		listearticle.addAll(liStDao.read());
+		System.out.println(listearticle);
+		
+		request.setAttribute("listearticle",listearticle);
 		request.getRequestDispatcher("/stock.jsp").forward(request, response);
-			
-			List<Stock> list = new ArrayList<>();
-			
-			list.addAll(nSDao.read());
-			
-			request.setAttribute("lister", list);
-			
-		}
-	
+		
+		
+		
+		
+		
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		StockDaoImpl nSDao1 = new  StockDaoImpl();
+		String mc =request.getParameter("reference");
+		Stock artic = new Stock();
+		System.out.println(mc);
+        artic.setReference(mc);
+        List<Stock>produits=nSDao1.getStockParMC(mc);
+   
+    
+  request.setAttribute("articles",artic);
+  request.getRequestDispatcher("/stock.jsp").forward(request, response);
+	
+		
+		
+		
+	}
+
+
+
+
 
 }
