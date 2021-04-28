@@ -34,9 +34,7 @@ public class servletstock extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		Stock tablearticle= new Stock();
-//		request.setAttribute("listearticle", tablearticle.read());
-//		this.getServletContext().getRequestDispatcher( "/stock.jsp").forward(request, response);;
+		request.getRequestDispatcher("/stock.jsp").forward(request, response);
 	}
 
 	/**

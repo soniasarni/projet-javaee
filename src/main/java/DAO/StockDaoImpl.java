@@ -19,21 +19,19 @@ public class StockDaoImpl implements IDAO<Stock> {
 	Connection connect = SeConnecter.getConnection();
 	@Override
 	public void Update(Stock objet) {
-		
-			 PreparedStatement req1;
+		PreparedStatement req1;
 			 try {
 				req1 = connect.prepareStatement("UPDATE stock set quantite =? where reference=?");
 				req1.setInt(1,objet.getQuantite());
 				req1.setString(2,objet.getReference());
 				req1.execute();
 				
-				
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+            } catch (SQLException e) {
 				e.printStackTrace();
 				System.out.println("unable to save the the product");
 			}
 		}
+	//recuperer la quantite d'une reference si elle existe
 	public int recupQte(Stock objet) {
 		int X=0;
 	
@@ -41,39 +39,53 @@ public class StockDaoImpl implements IDAO<Stock> {
 			
 			 try {
 				PreparedStatement req2= connect.prepareStatement("SELECT quantite FROM stock WHERE reference=?");
-				req2.setInt(1,objet.getQuantite());
+				req2.setString(1,objet.getReference());
+				System.out.println(req2);
 				ResultSet rs2 = req2.executeQuery();
 				while(rs2.next()) {
 					Stock article2 = new Stock();
-					
-					article2.setId(rs2.getInt("id"));
-					article2.setReference(rs2.getString("reference"));
 					article2.setQuantite(rs2.getInt("quantite"));
-					article2.setDateApprovisionnement(rs2.getDate("dateAprovisionnement"));
 				    X =rs2.getInt("quantite");
-				System.out.println();	
-				}
-
-			} catch (SQLException e1) {
+					}
+				} catch (SQLException e1) {
 					e1.printStackTrace();
 			}
-				
-			}
+		}
 	return X;
 	} 
 
 	@Override
 	public boolean ajout(Stock objet) {
 		recupQte(objet);
-		
+		System.out.println(recupQte(objet));
 		boolean message= false; 
-	   try {
+		if(recupQte(objet) > 0) {
+			//Si on a une quantité, je fais une mise à jour (Update)
+			try {
+			  PreparedStatement req = connect.prepareStatement(
+						"UPDATE stock SET quantite =?, dateApprovisionnement=now() WHERE reference=?");
+						//"Update stock(quantite,reference,dateApprovisionnement)" + "values(?,?,now())");
+				req.setInt(1, objet.getQuantite()+recupQte(objet));
+				req.setString(2, objet.getReference());
+				
+				System.out.println(req);
+				req.executeUpdate();
+				System.out.println(objet.getReference()+ "Insertion OK");
+				
+			//SI LE PRODUIT EXISTE
+	       message=true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				 message=false;
+			}
+		}else {
+			try {
+				//Si la quantite ou la reference n'existe pas je fais un insert en BDD
 			PreparedStatement req = connect.prepareStatement(
 					"INSERT INTO stock(quantite,reference,dateApprovisionnement)" + "values(?,?,now())");
 			req.setInt(1, objet.getQuantite());
 			req.setString(2, objet.getReference());
 			req.executeUpdate();
-			System.out.println(objet.getReference()+ "Insertion OK");
 		//SI LE PRODUIT EXISTE
        message=true;
 		} catch (Exception e) {
@@ -82,7 +94,8 @@ public class StockDaoImpl implements IDAO<Stock> {
 		}
 		return message;
 
-	
+		}
+		return message;
 	}
 //////Liste des articles dans le stock
 	public List<Stock> read() {
@@ -110,12 +123,13 @@ public class StockDaoImpl implements IDAO<Stock> {
 	return listearticle;
 	}
 
-@Override
+    @Override
 	public List<Stock> getStockParMC(String mc) {
 		List<Stock>produits=new ArrayList<Stock>();
 		try {
 			PreparedStatement pro = connect.prepareStatement("SELECT * FROM stock where  reference  LIKE ?");
 			pro.setString(1,"%"+mc+"%");
+			System.out.println(pro);
 			ResultSet rs = pro.executeQuery();
 			while (rs.next()) {
 				
@@ -135,25 +149,53 @@ public class StockDaoImpl implements IDAO<Stock> {
 	}
 
 	
-@Override
-public void delete(Stock objet) {
+     @Override
+     public void delete(Stock objet) {
 	try {
-		PreparedStatement req= connect.prepareStatement("DELETE FROM stock WHERE reference=?" );
-		req.setString(1,objet.getReference());
+		PreparedStatement req= connect.prepareStatement("DELETE * FROM stock WHERE reference=?" );
+		req.setInt(1,objet.getQuantite());
+		req.setString(2,objet.getReference());
 		req.executeUpdate();
 		System.out.println("delete OK");
 	}
 	catch (Exception e) {
 		e.printStackTrace();
 		System.out.println("Delete KO");
+		}
 	}
-	
-	
-}
+   
+    @Override
+    public boolean remove(Stock objet) {
+	recupQte(objet);
+	System.out.println(recupQte(objet));
+	boolean message= false; 
+	if(recupQte(objet) > objet.getQuantite()) {
+		//Si on a une quantité, je fais une mise à jour (Update)
+		try {
+			System.out.println("DANS LE UPDATE");
+		  
+			PreparedStatement req = connect.prepareStatement(
+					"UPDATE stock SET quantite =?, dateApprovisionnement=now() WHERE reference=?");
+					//"Update stock(quantite,reference,dateApprovisionnement)" + "values(?,?,now())");
+			req.setInt(1,recupQte(objet) - objet.getQuantite());
+			req.setString(2, objet.getReference());
+			
+			System.out.println(req);
+			req.executeUpdate();
+			System.out.println(objet.getReference()+ "Insertion OK");
+			
+		}
 		
+	 catch (Exception e) {
+		e.printStackTrace();
+		 message=false;
+	} 
+	}
+	return message;
+	
 	}
 
-
+    }
 	
 	
 

@@ -10,5 +10,5 @@ public interface IDAO<T> {
 	public  List<Stock>  read();
 	public List<Stock> getStockParMC(String mc);
 	public void delete(Stock objet);
-
+	public boolean remove(Stock objet);
 }

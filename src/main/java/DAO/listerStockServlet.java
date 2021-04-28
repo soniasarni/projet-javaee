@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import beans.Stock;
+import java.sql.Date;
 
+import javax.servlet.ServletException;
 
 
 /**
@@ -40,26 +42,17 @@ public class listerStockServlet extends HttpServlet {
 		
 		request.setAttribute("listearticle",listearticle);
 		request.getRequestDispatcher("/stock.jsp").forward(request, response);
-		
-		
-		
-		
-		
-
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
 		StockDaoImpl nSDao1 = new  StockDaoImpl();
 		String mc =request.getParameter("reference");
 		Stock artic = new Stock();
-		System.out.println(mc);
         artic.setReference(mc);
-        List<Stock>produits=nSDao1.getStockParMC(mc);
-   
-    
-  request.setAttribute("articles",artic);
-  request.getRequestDispatcher("/stock.jsp").forward(request, response);
+      
+        List<Stock>produits=new ArrayList<>();
+        produits=nSDao1.getStockParMC(mc);
+        request.setAttribute("articles",produits);
+        request.getRequestDispatcher("/stock.jsp").forward(request, response);
 	
 		
 		
