@@ -12,54 +12,143 @@
 </head>
 
 <body>
+<!-- approvisionner le stock -->
 <div class="container">
- 
+ <h3>improvisionner le stock</h3>
 <form method ="post" action="<%=request.getContextPath()%>/servletstock">
 <label for="reference">reference</label>
-<input type="text" name="reference">
+test
+${ref }
+<input type="text" name="reference" required value="${ref}">
 <label for="quantite">quantite</label>
-<input type="number" name="quantite">
+<input type="number" name="quantite" required value="${qte}">
 <button type="submit" id="btn_enregistrer">Enregistrer</button>
 
  </form>
+ 
+</div>
+ <br><hr><br>
+
+      
+<!-- Chercher une reference si elle existe et voir sa quantite  -->
+
+<form method ="post" action="<%=request.getContextPath()%>/listerStockServlet" class="tab_rech">
+<h3>Chercher un produit dans le stock</h3>
+  <table border="1" class="tab_rech">
+         <tr>
+           <th>Reference</th>
+           <th>Quantite</th>
+         </tr>
+           <c:forEach var="art" items="${articles}">
+              <tr>
+               <td><c:out value="${art.reference}"></c:out></td>
+               <td> <c:out value="${art.quantite}"/></td>
+            </tr>
+          </c:forEach>
+   </table>
+       <input type="text" name="reference"required>
+       <input type="submit" value="recherche" name="action">
+  
+</form>
+    <br><hr><br>
+   <!--AFFICHER LA LISTE DU STOCK  -->
+<h3>liste des produits dans le stock</h3>
+<table border="1">
+   <tr>
+      <th>Reference</th>
+      <th>Quantite</th>
+      <th>DateApprovisionnement</th>
+      <th>supprimer</th>
+      <th>modifier</th>
+    </tr>
+
+  <c:forEach var="variable1" items="${requestScope.listearticle}">
+    <tr>
+       <td><c:out value="${variable1.reference}"></c:out></td>
+       <td><c:out value="${variable1.quantite}"/></td>
+       <td><c:out value="${variable1.dateApprovisionnement}"/></td>
+      <!--  <td><a href="<%=request.getContextPath()%>/SuppStock_servlet?action=supprimer&reference= ${variable1.reference}">supprimer</a></td>
+       <td><a href="SuppStock_servlet?action=Update&reference=${variable1.reference}">modifier</a></td> -->
+       
+     </tr>
+   </c:forEach>
+</table>
+      <br><hr><br>
+   
+<!--   <!--supprimer les articles du stock 
+<div class="container">
+
+<form method ="post" action="<%=request.getContextPath()%>/SuppStock_servlet">
+ <h3>supprimer les articles </h3>
+ <table border="1">
+   <tr>
+      <th>Reference</th>
+      <th>Quantite</th>
+      <th>DateApprovisionnement</th>
+   </tr>
+ <c:forEach var="variable2" items="${listearticle}">
+<tr>
+<td><input type="text" name="reference"required  value="${variable2.reference}"></td>
+<td><input type="number" name="quantite"required value="${variable2.quantite}"></td>
+<td><input type="date" name="dateApprovisionnement"required value="${variable2.dateApprovisionnement}"></td>
+<td><input type="submit" value="supprimer" ></td>
+
+</tr>
+</c:forEach>
+ </table>
+ </form>
+</div>  -->
+   <!--modifier les articles du stock -->
+
+<!-- <form method ="post" action="<%=request.getContextPath()%>/modifStock_servlet">
+ <h3>modifier le stock </h3>
+ <table border="1">
+   <tr>
+      <th>Reference</th>
+      <th>Quantite</th>
+      <th>DateApprovisionnement</th>
+   </tr>
+ <c:forEach var="variable2" items="${listearticle}">
+<tr>
+<td><input type="text" name="reference"required  value="${variable2.reference}"></td>
+<td><input type="number" name="quantite"required value="${variable2.quantite}"></td>
+<td><input type="date" name="dateApprovisionnement"required value="${variable2.dateApprovisionnement}"></td>
+<td><input type="submit" value="modifier"></td>
+</tr>
+</c:forEach>
+ </table>
+</form>  -->
+ <div class="container">
+<h3>modifier /Supprimer les articles</h3>
+ <table border="1">
+   <tr>
+      <th>Reference</th>
+      <th>Quantite</th>
+      <th>DateApprovisionnement</th>
+      <th>modifier</th>
+      <th>supprimer</th>
+   </tr>
+ <c:forEach var="variable2" items="${listearticle}">
+    <tr>
+                  <td>${variable2.reference}</td>
+                  <td>${variable2.quantite}</td>
+                  <td>${variable2.dateApprovisionnement}</td>
+                  <td>
+                      <a href="<%=request.getContextPath()%>/SuppStock_servlet?action=modifier&id=${variable2.id}&reference=${variable2.reference}&quantite=${variable2.quantite}"> 
+                    <!-- <a href="<%= request.getContextPath()%>/SuppStock_servlet?action=modifier&id=${variable2.id}"> -->
+                          modifier
+                      </a>
+                   </td>
+                  <td>
+                      <a href="<%= request.getContextPath()%>/SuppStock_servlet?action=supprimer&id=${variable2.id}">
+                           supprimer
+                      </a>
+                   </td>
+   </tr>
+</c:forEach>
+ </table>
  </div>
  
-
-<table border="1">
-<tr>
-<th>Reference</th>
-<th>Quantite</th>
-<th>DateApprovisionnement</th>
-</tr>
-<c:forEach var="variable1" items="${listearticle}">
  
- <tr>
-   <td><c:out value="${variable1.reference}"></c:out></td>
-   <td> <c:out value="${variable1.quantite}"/></td>
-   <td> <c:out value="${variable1.dateApprovisionnement}"/></td>
-  </tr>
-  
- </c:forEach>
-
-</table>
-<!-- Chercher une reference si elle existe et voir sa quantite  -->
-<form method ="post" action="<%=request.getContextPath()%>/listerStockServlet" class="tab_rech">
-<input type="text" name="reference"required>
-<input type="submit" value="ok">
-</form>
-
-<table border="1" class="tab_rech">
-<tr>
-<th>Reference</th>
-<th>Quantite</th>
-</tr>
-<c:forEach var="art" items="${articles}">
-<tr>
-   <td><c:out value="${art.reference}"></c:out></td>
-   <td> <c:out value="${art.quantite}"/></td>
-  
-  </tr>
-  </c:forEach>
-</table>
-</body>
-</html>
+   </body>
+   </html>

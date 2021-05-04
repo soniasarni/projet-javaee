@@ -1,27 +1,16 @@
 package beans;
+import java.util.Date;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Stock {
 private int id; 	
 private int quantite;
 private String reference;
 private Date dateApprovisionnement ;
-private List<Stock>produits=new ArrayList<>();
 
-
-
-public List<Stock> getProduits() {
-	return produits;
-}
-public void setProduits(List<Stock> produits) {
-	this.produits = produits;
-}
 public Stock() {
 	super();
-	// TODO Auto-generated constructor stub
+	
 }
 public Stock(int quantite, String reference, Date dateApprovisionnement) {
 	super();
@@ -34,6 +23,9 @@ public Stock(int quantite, String reference) {
 	super();
 	this.quantite = quantite;
 	this.reference = reference;
+}
+public Stock(int id) {
+	// TODO Auto-generated constructor stub
 }
 public int getId() {
 	return id;
@@ -58,6 +50,11 @@ public Date getDateApprovisionnement() {
 }
 public void setDateApprovisionnement(Date dateApprovisionnement) {
 	this.dateApprovisionnement = dateApprovisionnement;
+}
+@Override
+public String toString() {
+	return "Stock [id=" + id + ", quantite=" + quantite + ", reference=" + reference + ", dateApprovisionnement="
+			+ dateApprovisionnement + "]";
 }
 
 }
