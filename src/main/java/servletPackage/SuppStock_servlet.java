@@ -27,10 +27,7 @@ public class SuppStock_servlet extends HttpServlet {
     	List<Stock> listearticle = new ArrayList<>();	
 		listearticle.addAll(liStDao.read());
 		request.setAttribute("listearticle",listearticle);
-        //request.getRequestDispatcher("/stock.jsp").forward(request, response);
         String action= request.getParameter("action");
-	 
-        System.out.println("Dans le Doget de SuppuStock");
 	if (action!=null) {
                 if (action.equals("supprimer")) {
                 int id=Integer.parseInt(request.getParameter("id"));
@@ -42,35 +39,33 @@ public class SuppStock_servlet extends HttpServlet {
 
                 }else if(action.equals("modifier")) {
                 int id=Integer.parseInt(request.getParameter("id"));
-                
-			  String ref=request.getParameter("reference");	
-			  int qte=Integer.parseInt(request.getParameter("quantite"));
-			  System.out.println(id+"moussa");  
-			  System.out.println(ref);
-			  System.out.println(qte);
-			 
-               
-                request.setAttribute("qte",qte);
-                
+                String ref=request.getParameter("reference");	
+			    int qte=Integer.parseInt(request.getParameter("quantite"));
+			    
+			    request.setAttribute("qte",qte);
                 request.setAttribute("ref",ref);
+              //  Stock sk=new Stock(qte,ref);
                 
-                Stock sk=new Stock(qte,ref);
-                sk.setId(id);
-              // Stock sk=new Stock(qte,ref);
-               System.out.println(sk+"==="+id);
-//                liStDao.Update(sk);
-//                List<Stock> listearticle1 = new ArrayList<>();	
-//                listearticle.addAll(liStDao.read());
-//                request.setAttribute("listearticle",listearticle1);
-                //response.sendRedirect("/servletstock");
-   
-		}
-	}
+//                sk.setId(id);
+//                sk.setReference(ref);
+//                sk.setQuantite(qte);
+                //liStDao.modifier(qte,ref);
+              }
+	    }
 	request.getRequestDispatcher("/stock.jsp").forward(request, response);
-	
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		    String ref=request.getParameter("reference");	
+		    int qte=Integer.parseInt(request.getParameter("quantite"));
+		   // int id=Integer.parseInt(request.getParameter("id"));
+		    //le mettre dans ma base de données
+		    StockDaoImpl nSDao = new  StockDaoImpl();
+		    Stock article = new Stock(qte,ref);
+				nSDao.modifier(article) ;
+					 request.setAttribute("message", " L'article a bien été modifier");
+					 request.getRequestDispatcher("/stock.jsp").forward(request, response);
+				System.out.println();
     }
 	
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    }
 
 }

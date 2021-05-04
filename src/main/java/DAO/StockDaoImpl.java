@@ -35,6 +35,26 @@ public class StockDaoImpl implements IDAO<Stock> {
 				System.out.println("unable to save the the product");
 			}
 		}
+	
+	
+	@Override
+	public void modifier(Stock objet) {
+		PreparedStatement req1;
+		 try {
+			req1 = connect.prepareStatement("UPDATE stock SET quantite =? WHERE reference=?");
+			req1.setInt(1,objet.getQuantite());
+			req1.setString(2,objet.getReference());
+			
+			
+			System.out.println(req1);
+			req1.execute();
+			System.out.println("mise a jour faite");
+       } catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("unable to save the the product");
+		}
+	}
+	
 	//recuperer la quantite d'une reference si elle existe
 	public int recupQte(Stock objet) {
 		int X=0;
@@ -64,7 +84,7 @@ public class StockDaoImpl implements IDAO<Stock> {
 			//Si on a une quantité, je fais une mise à jour (Update)
 			try {
 			  PreparedStatement req = connect.prepareStatement(
-						"UPDATE stock SET quantite =?, dateApprovisionnement=now() WHERE reference=?");
+						"UPDATE stock SET quantite =?,dateApprovisionnement=now() WHERE reference=?");
 						//"Update stock(quantite,reference,dateApprovisionnement)" + "values(?,?,now())");
 				req.setInt(1, objet.getQuantite()+recupQte(objet));
 				req.setString(2, objet.getReference());
@@ -186,7 +206,6 @@ public class StockDaoImpl implements IDAO<Stock> {
 			req.setInt(1,recupQte(objet) - objet.getQuantite());
 			req.setString(2, objet.getReference());
 			
-			System.out.println(req);
 			req.executeUpdate();
 			System.out.println(objet.getReference()+ "Insertion OK");
 			
@@ -201,8 +220,7 @@ public class StockDaoImpl implements IDAO<Stock> {
 	
 	}
   @Override
-	//public List<Stock>récupéré(Stock objet) {
-	   public List<Stock>récupéré(int id) {
+	 public List<Stock>recuperer(int id) {
 		List<Stock> listearticle = new ArrayList<Stock>();	
 				
 				try {
@@ -229,6 +247,16 @@ public class StockDaoImpl implements IDAO<Stock> {
 				}
 			return listearticle;
 			}
+
+
+
+@Override
+public void modifier(int quantite, String reference) {
+	// TODO Auto-generated method stub
+	
+}
+
+
 
 
 	

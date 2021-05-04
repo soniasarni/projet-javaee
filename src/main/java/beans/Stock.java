@@ -27,6 +27,9 @@ public Stock(int quantite, String reference) {
 public Stock(int id) {
 	// TODO Auto-generated constructor stub
 }
+public Stock(int id,int qte, String ref) {
+	// TODO Auto-generated constructor stub
+}
 public int getId() {
 	return id;
 }

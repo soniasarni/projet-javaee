@@ -19,9 +19,9 @@
 <label for="reference">reference</label>
 test
 ${ref }
-<input type="text" name="reference" required value="${ref}">
+<input type="text" name="reference" required >
 <label for="quantite">quantite</label>
-<input type="number" name="quantite" required value="${qte}">
+<input type="number" name="quantite" required >
 <button type="submit" id="btn_enregistrer">Enregistrer</button>
 
  </form>
@@ -135,8 +135,7 @@ ${ref }
                   <td>${variable2.dateApprovisionnement}</td>
                   <td>
                       <a href="<%=request.getContextPath()%>/SuppStock_servlet?action=modifier&id=${variable2.id}&reference=${variable2.reference}&quantite=${variable2.quantite}"> 
-                    <!-- <a href="<%= request.getContextPath()%>/SuppStock_servlet?action=modifier&id=${variable2.id}"> -->
-                          modifier
+                         modifier
                       </a>
                    </td>
                   <td>
@@ -149,6 +148,19 @@ ${ref }
  </table>
  </div>
  
+ <!-- saisir les modififcation-->
+<div class="container">
+ <h3>saisir les modififcations</h3>
+<form method ="post" action="<%=request.getContextPath()%>/SuppStock_servlet">
+<label for="reference">reference</label>
+
+<input type="text" name="reference" required value="${ref}">
+<label for="quantite">quantite</label>
+<input type="number" name="quantite" required value="${qte}">
+<button type="submit" id="btn_enregistrer">Enregistrer</button>
+
+ </form>
  
+</div>
    </body>
    </html>
